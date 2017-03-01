@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.tuxship.fx.nodes.PortTextField?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.tuxship.sshbackup.ui.MainWindowController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="92.0" prefWidth="92.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="140.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.0" minWidth="68.0" prefWidth="68.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="140.0" prefWidth="140.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Host" GridPane.rowIndex="1" />
+      <Label text="HostKey" GridPane.rowIndex="3" />
+      <Label text="User" GridPane.rowIndex="2" />
+      <Label text="Port" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Password" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="4">
+         <children>
+            <Label text="Server Settings">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+      <TextField fx:id="uiHost" promptText="IP or Hostname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="uiUser" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+         <children>
+            <TextField fx:id="uiHostKey" prefWidth="280.0" promptText="the key to verify the server's identity" />
+            <Button fx:id="btnQueryKey" mnemonicParsing="false" text="Query" />
+         </children>
+      </HBox>
+      <PasswordField fx:id="uiPassword" promptText="Password" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <Label text="Command" GridPane.rowIndex="4" />
+      <TextArea fx:id="uiCommand" prefHeight="200.0" prefWidth="200.0" promptText="the command executing the backup task on the server" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="4" GridPane.rowIndex="6">
+         <children>
+            <Label text="Client Settings">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+      <Label text="Output Folder" GridPane.rowIndex="7" />
+      <TextField fx:id="uiOutputFolder" promptText="where to store the backups" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <Button fx:id="btnSelectFolder" onAction="#selectFolder" mnemonicParsing="false" text="Select.." GridPane.columnIndex="2" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Button>
+      <Label text="Naming Scheme" GridPane.rowIndex="8" />
+      <TextField fx:id="uiNamingScheme" promptText="file name scheme" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Button fx:id="btnBackup" mnemonicParsing="false" onAction="#backup" prefHeight="50.0" prefWidth="81.0" text="BACKUP" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <PortTextField fx:id="uiPort" promptText="SSH Port" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <ButtonBar prefHeight="30.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+        <buttons>
+            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#save" text="Save" />
+            <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" text="Exit" />
+        </buttons>
+         <GridPane.margin>
+            <Insets top="10.0" />
+         </GridPane.margin>
+      </ButtonBar>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>
