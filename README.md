@@ -14,3 +14,12 @@ An example would be the following command, which stores all data in the root-dir
 
 ###Get it
 Either `git clone` and build it yourself with `maven` or download a [windows build here](https://sshbackup.tuxship.org/builds/) (signed with key id: [F864BE90](http://pgp.mit.edu/pks/lookup?op=vindex&search=0x34E65F36F864BE90)) 
+
+
+### Dependencies
+SSHBackup makes use of the following libraries:
+
+* [SSHJ](https://github.com/hierynomus/sshj) (Apache License 2.0)
+* [Spring 4](https://github.com/spring-projects/spring-framework) (Apache License 2.0)
+* [Gson](https://github.com/google/gson) (Apache License 2.0)
+* [Commons Lang](https://commons.apache.org/proper/commons-lang/) (Apache License 2.0)
