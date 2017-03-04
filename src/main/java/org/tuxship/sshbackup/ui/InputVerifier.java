@@ -3,7 +3,8 @@ package org.tuxship.sshbackup.ui;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.tuxship.fx.nodes.PortTextField;
 
 /**
