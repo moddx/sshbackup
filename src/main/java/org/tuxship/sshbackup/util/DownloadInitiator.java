@@ -58,7 +58,7 @@ public class DownloadInitiator {
                 protected void cancelled() {
                     super.cancelled();
                     onCancel.run();
-                    updateMessage("Cancelled!");
+                    updateMessage("DownloadTask Cancelled!");
                 }
             };
 

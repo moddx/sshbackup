@@ -60,7 +60,9 @@
          </children>
       </VBox>
       <TextField fx:id="uiHost" promptText="IP or Hostname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <PortTextField fx:id="uiPort" promptText="SSH Port" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <TextField fx:id="uiUser" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <PasswordField fx:id="uiPassword" promptText="Password" GridPane.columnIndex="3" GridPane.rowIndex="2" />
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets />
@@ -70,7 +72,7 @@
             <Button fx:id="btnQueryKey" mnemonicParsing="false" text="Query" />
          </children>
       </HBox>
-      <PasswordField fx:id="uiPassword" promptText="Password" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
       <Label text="Command" GridPane.rowIndex="4" />
       <TextArea fx:id="uiCommand" prefHeight="200.0" prefWidth="200.0" promptText="the command executing the backup task on the server" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.rowSpan="2" />
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="4" GridPane.rowIndex="6">
@@ -97,7 +99,6 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <PortTextField fx:id="uiPort" promptText="SSH Port" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <ButtonBar prefHeight="30.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
         <buttons>
             <Button fx:id="btnSave" mnemonicParsing="false" onAction="#save" text="Save" />
