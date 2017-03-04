@@ -27,6 +27,8 @@ public class MainApp extends Application {
 
         MainWindowProvider winProv = ctx.getBean(MainWindowProvider.class);
         winProv.loadToStage(mainStage);
+        mainStage.setMinWidth(450d);
+        mainStage.setMinHeight(320d);
 
 //        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo.png")));
     }

@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.tuxship.fx.nodes.PortTextField?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.tuxship.sshbackup.ui.MainWindowController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="320.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.tuxship.sshbackup.ui.MainWindowController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="92.0" prefWidth="92.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="140.0" />
@@ -87,7 +87,7 @@
       </VBox>
       <Label text="Output Folder" GridPane.rowIndex="7" />
       <TextField fx:id="uiOutputFolder" promptText="where to store the backups" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Button fx:id="btnSelectFolder" onAction="#selectFolder" mnemonicParsing="false" text="Select.." GridPane.columnIndex="2" GridPane.rowIndex="7">
+      <Button fx:id="btnSelectFolder" mnemonicParsing="false" onAction="#selectFolder" text="Select.." GridPane.columnIndex="2" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
