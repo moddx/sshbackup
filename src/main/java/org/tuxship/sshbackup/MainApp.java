@@ -14,7 +14,7 @@ import javax.inject.Named;
 @Named
 public class MainApp extends Application {
 
-    public static final String version = "0.1.0";
+    public static final String version = "0.1.1";
 
     private static Stage mainStage;
     private ApplicationContext ctx;
