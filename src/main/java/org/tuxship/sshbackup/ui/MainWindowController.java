@@ -1,6 +1,5 @@
 package org.tuxship.sshbackup.ui;
 
-import com.sun.tracing.ProviderName;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,14 +7,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.tuxship.fx.nodes.PortTextField;
 import org.tuxship.sshbackup.BackupConfig;
 import org.tuxship.sshbackup.util.ConfigStore;
 import org.tuxship.sshbackup.util.ConfigVerifier;
 import org.tuxship.sshbackup.util.DownloadInitiator;
+import org.tuxship.sshbackup.util.HostKeyQuery;
 
 import javax.inject.Named;
 import java.io.File;
@@ -32,6 +32,9 @@ public class MainWindowController {
 
     @Autowired
     private DownloadInitiator initiator;
+
+    @Autowired
+    private HostKeyQuery hostKeyQuery;
 
     @FXML TextField uiHost;
     @FXML PortTextField uiPort;
@@ -114,6 +117,13 @@ public class MainWindowController {
     private void exit() {
         Stage stage = (Stage) btnExit.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void queryKey() {
+        String fp = hostKeyQuery.query(buildConfig());
+        if(fp != null)
+            uiHostKey.setText(fp);
     }
 
     private BackupConfig buildConfig() {

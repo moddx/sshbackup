@@ -69,7 +69,7 @@
          </GridPane.margin>
          <children>
             <TextField fx:id="uiHostKey" prefWidth="280.0" promptText="the key to verify the server's identity" />
-            <Button fx:id="btnQueryKey" mnemonicParsing="false" text="Query" />
+            <Button fx:id="btnQueryKey" onAction="#queryKey" mnemonicParsing="false" text="Query" />
          </children>
       </HBox>
 

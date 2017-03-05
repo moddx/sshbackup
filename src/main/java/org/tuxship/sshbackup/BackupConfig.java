@@ -1,5 +1,7 @@
 package org.tuxship.sshbackup;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by Matthias Ervens on 17.01.2017.
  */
@@ -16,7 +18,7 @@ public class BackupConfig {
 
     public BackupConfig(String host, Integer port, String user, String password, String hostKey, String command, String outputFolder, String namingScheme) {
         this.host = host;
-        this.port = port;
+        this.port = StringUtils.isEmpty(port) ? 22 : port;
         this.user = user;
         this.password = password;
         this.hostKey = hostKey;

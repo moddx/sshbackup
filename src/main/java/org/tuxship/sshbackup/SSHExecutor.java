@@ -38,6 +38,7 @@ public class SSHExecutor {
 
     public boolean download(String outputFile) {
         try (SSHClient ssh = new SSHClient()) {
+            ssh.loadKnownHosts();
             ssh.addHostKeyVerifier(config.getHostKey());
             ssh.connect(config.getHost(), config.getPort());
             ssh.authPassword(config.getUser(), config.getPassword());
