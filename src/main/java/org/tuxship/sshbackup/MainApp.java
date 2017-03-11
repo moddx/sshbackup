@@ -24,7 +24,7 @@ public class MainApp extends Application {
 
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
-    public static final String version = "0.1.1";
+    public static final String version = "0.2.0";
 
     private static Stage mainStage;
     private ApplicationContext ctx;
