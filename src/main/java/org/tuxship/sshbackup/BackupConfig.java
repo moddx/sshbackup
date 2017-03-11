@@ -11,20 +11,24 @@ public class BackupConfig {
     private Integer port;
     private String user;
     private String password;
+    private String keyFile;
     private String hostKey;
     private String command;
     private String outputFolder;
     private String namingScheme;
+    private Boolean askForPw;
 
-    public BackupConfig(String host, Integer port, String user, String password, String hostKey, String command, String outputFolder, String namingScheme) {
+    public BackupConfig(String host, Integer port, String user, String password, String keyFile, String hostKey, String command, String outputFolder, String namingScheme, Boolean askForPw) {
         this.host = host;
-        this.port = StringUtils.isEmpty(port) ? 22 : port;
+        this.port = port;
         this.user = user;
         this.password = password;
+        this.keyFile = keyFile;
         this.hostKey = hostKey;
         this.command = command;
         this.outputFolder = outputFolder;
         this.namingScheme = namingScheme;
+        this.askForPw = askForPw;
     }
 
     public String getHost() {
@@ -39,6 +43,12 @@ public class BackupConfig {
     public String getPassword() {
         return password;
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getKeyFile() {
+        return keyFile;
+    }
     public String getHostKey() {
         return hostKey;
     }
@@ -51,6 +61,10 @@ public class BackupConfig {
     }
     public String getNamingScheme() {
         return namingScheme;
+    }
+
+    public Boolean getAskForPw() {
+        return askForPw;
     }
 
     @Deprecated

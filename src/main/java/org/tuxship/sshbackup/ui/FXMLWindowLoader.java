@@ -1,5 +1,6 @@
 package org.tuxship.sshbackup.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -51,6 +52,22 @@ public class FXMLWindowLoader<T> {
 //        applyCss(scene);
         view.setScene(scene);
         view.show();
+
+        return loader.getController();
+    }
+
+    public T showAndWaitForWindow() throws IOException {
+        Stage view = new Stage(style);
+        view.initModality(Modality.WINDOW_MODAL);
+        view.initOwner(owner);
+        if(title != null) view.setTitle(title);
+
+        FXMLLoader loader = new FXMLLoader(fxml);
+        loader.setControllerFactory(aClass -> ctx.getBean(aClass));
+        Scene scene = new Scene(loader.load());
+//        applyCss(scene);
+        view.setScene(scene);
+        view.showAndWait();
 
         return loader.getController();
     }

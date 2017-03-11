@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Separator?>
@@ -16,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.tuxship.fx.nodes.PortTextField?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="320.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.tuxship.sshbackup.ui.MainWindowController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="380.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.tuxship.sshbackup.ui.MainWindowController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="92.0" prefWidth="92.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="140.0" />
@@ -27,6 +28,8 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -37,7 +40,7 @@
   </rowConstraints>
    <children>
       <Label text="Host" GridPane.rowIndex="1" />
-      <Label text="HostKey" GridPane.rowIndex="3" />
+      <Label text="Host Key" GridPane.rowIndex="5" />
       <Label text="User" GridPane.rowIndex="2" />
       <Label text="Port" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <GridPane.margin>
@@ -62,20 +65,20 @@
       <TextField fx:id="uiHost" promptText="IP or Hostname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <PortTextField fx:id="uiPort" promptText="SSH Port" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <TextField fx:id="uiUser" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <PasswordField fx:id="uiPassword" promptText="Password" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+      <PasswordField fx:id="uiPassword" promptText="for pw authentication" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets />
          </GridPane.margin>
          <children>
-            <TextField fx:id="uiHostKey" prefWidth="280.0" promptText="the key to verify the server's identity" />
-            <Button fx:id="btnQueryKey" onAction="#queryKey" mnemonicParsing="false" text="Query" />
+            <TextField fx:id="uiHostKey" prefWidth="280.0" promptText="hostkey fingerprint (e.g. 4f:2e:87:..)" />
+            <Button fx:id="btnQueryKey" mnemonicParsing="false" onAction="#queryKey" prefWidth="54.0" text="Query" />
          </children>
       </HBox>
 
-      <Label text="Command" GridPane.rowIndex="4" />
-      <TextArea fx:id="uiCommand" prefHeight="200.0" prefWidth="200.0" promptText="the command executing the backup task on the server" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="4" GridPane.rowIndex="6">
+      <Label text="Command" GridPane.rowIndex="6" />
+      <TextArea fx:id="uiCommand" prefHeight="200.0" prefWidth="200.0" promptText="the command executing the backup task on the server" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.rowSpan="2" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="4" GridPane.rowIndex="8">
          <children>
             <Label text="Client Settings">
                <font>
@@ -85,21 +88,21 @@
             <Separator prefWidth="200.0" />
          </children>
       </VBox>
-      <Label text="Output Folder" GridPane.rowIndex="7" />
-      <TextField fx:id="uiOutputFolder" promptText="where to store the backups" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Button fx:id="btnSelectFolder" mnemonicParsing="false" onAction="#selectFolder" text="Select.." GridPane.columnIndex="2" GridPane.rowIndex="7">
+      <Label text="Output Folder" GridPane.rowIndex="9" />
+      <TextField fx:id="uiOutputFolder" promptText="where to store the backups" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+      <Button fx:id="btnSelectFolder" mnemonicParsing="false" onAction="#selectFolder" text="Select.." GridPane.columnIndex="2" GridPane.rowIndex="9">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Button>
-      <Label text="Naming Scheme" GridPane.rowIndex="8" />
-      <TextField fx:id="uiNamingScheme" promptText="file name scheme" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Button fx:id="btnBackup" mnemonicParsing="false" onAction="#backup" prefHeight="50.0" prefWidth="81.0" text="BACKUP" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+      <Label text="Naming Scheme" GridPane.rowIndex="10" />
+      <TextField fx:id="uiNamingScheme" promptText="file name scheme" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+      <Button fx:id="btnBackup" mnemonicParsing="false" onAction="#backup" prefHeight="50.0" prefWidth="81.0" text="BACKUP" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.rowSpan="2" GridPane.valignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
       </Button>
-      <ButtonBar prefHeight="30.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+      <ButtonBar prefHeight="30.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="11">
         <buttons>
             <Button fx:id="btnSave" mnemonicParsing="false" onAction="#save" text="Save" />
             <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" text="Exit" />
@@ -108,6 +111,22 @@
             <Insets top="10.0" />
          </GridPane.margin>
       </ButtonBar>
+      <Label text="Private Key" GridPane.rowIndex="3" />
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+         <children>
+            <TextField fx:id="uiPrivKey" prefWidth="280.0" promptText="for public key authentication" />
+            <Button fx:id="btnSelectPrivKey" mnemonicParsing="false" onAction="#selectPrivKey" prefWidth="54.0" text="Select.." />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+         <children>
+            <CheckBox fx:id="uiAskForPw" mnemonicParsing="false" text="ask for password">
+               <HBox.margin>
+                  <Insets top="-5.0" />
+               </HBox.margin>
+            </CheckBox>
+         </children>
+      </HBox>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -1,9 +1,12 @@
 package org.tuxship.sshbackup.util;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tuxship.sshbackup.BackupConfig;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,6 +16,8 @@ import java.nio.file.Files;
  */
 @Service
 public class ConfigStoreImpl implements ConfigStore {
+
+    private final Logger logger = LoggerFactory.getLogger(ConfigStore.class);
 
     @Value("${user.home}")
     private String userHome;
@@ -27,7 +32,7 @@ public class ConfigStoreImpl implements ConfigStore {
             gson.toJson(config, writer);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Exception while storing configuration.", e);
         }
 
 
@@ -41,11 +46,9 @@ public class ConfigStoreImpl implements ConfigStore {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(saveFile), "UTF-8")) {
             return gson.fromJson(reader, BackupConfig.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Exception while loading configuration.", e);
+            return null;
         }
-
-        System.err.println("Error while loading json storage.");
-        return null;
     }
 
 

@@ -1,17 +1,17 @@
 package org.tuxship.sshbackup.ui;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.tuxship.fx.nodes.PortTextField;
 import org.tuxship.sshbackup.BackupConfig;
+import org.tuxship.sshbackup.MainApp;
 import org.tuxship.sshbackup.util.ConfigStore;
 import org.tuxship.sshbackup.util.ConfigVerifier;
 import org.tuxship.sshbackup.util.DownloadInitiator;
@@ -40,6 +40,9 @@ public class MainWindowController {
     @FXML PortTextField uiPort;
     @FXML TextField uiUser;
     @FXML PasswordField uiPassword;
+    @FXML TextField uiPrivKey;
+    @FXML Button btnSelectPrivKey;
+    @FXML CheckBox uiAskForPw;
 
     @FXML TextField uiHostKey;
     @FXML Button btnQueryKey;
@@ -69,10 +72,12 @@ public class MainWindowController {
                 uiPort.setText(config.getPort().toString());
                 uiUser.setText(config.getUser());
                 uiPassword.setText(config.getPassword());
+                uiPrivKey.setText(config.getKeyFile());
                 uiHostKey.setText(config.getHostKey());
                 uiCommand.setText(config.getCommand());
                 uiOutputFolder.setText(config.getOutputFolder());
                 uiNamingScheme.setText(config.getNamingScheme());
+                uiAskForPw.setSelected(config.getAskForPw());
             }
         });
     }
@@ -120,6 +125,26 @@ public class MainWindowController {
     }
 
     @FXML
+    private void selectPrivKey() {
+        FileChooser fChooser = new FileChooser();
+        if(StringUtils.isEmpty(uiPrivKey.getText()))
+            fChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        else {
+            fChooser.setInitialDirectory(new File(uiPrivKey.getText()).getParentFile());
+        }
+        File selected = fChooser.showOpenDialog(MainApp.getMainStage());
+
+        if(selected == null) return;
+
+        try {
+            uiPrivKey.setText(selected.getCanonicalPath());
+        } catch (IOException e) {
+            System.err.println("Could not get canonical path of selected keyfile. aborting.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void queryKey() {
         String fp = hostKeyQuery.query(buildConfig());
         if(fp != null)
@@ -132,10 +157,12 @@ public class MainWindowController {
                 Integer.parseInt(uiPort.getText()),
                 uiUser.getText(),
                 uiPassword.getText(),
+                uiPrivKey.getText(),
                 uiHostKey.getText(),
                 uiCommand.getText(),
                 uiOutputFolder.getText(),
-                uiNamingScheme.getText()
+                uiNamingScheme.getText(),
+                uiAskForPw.isSelected()
         );
     }
 }

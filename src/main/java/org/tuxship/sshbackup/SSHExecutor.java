@@ -2,25 +2,35 @@ package org.tuxship.sshbackup;
 
 import javafx.beans.property.*;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matthias Ervens on 16.01.2017.
  */
+@Named
+@Scope("prototype")
 public class SSHExecutor {
+
+    private static final Logger logger = LoggerFactory.getLogger(SSHExecutor.class);
 
     private static final Boolean SUCCESS = Boolean.TRUE;
     private static final Boolean FAILURE = Boolean.FALSE;
 
-    public static final int DEFAULT_BUFFER_SIZE = 8192;
-    private int buffer_size = DEFAULT_BUFFER_SIZE;
+    @Value("${sshexec.buffer}")
+    private int bufferSize;
 
     private BackupConfig config;
-
 
     private long readTotalBytes = 0L;
     private long durationMs = 0L;
@@ -28,10 +38,13 @@ public class SSHExecutor {
     private DoubleProperty speedKBs;
     private LongProperty bytesDownloaded;
 
-    private boolean canceled = false;
+    private boolean cancelled = false;
 
-    public SSHExecutor(BackupConfig config) {
+    public void init(BackupConfig config) {
         this.config = config;
+        readTotalBytes = 0L;
+        durationMs = 0L;
+        cancelled = false;
         speedKBs = new SimpleDoubleProperty();
         bytesDownloaded = new SimpleLongProperty(readTotalBytes);
     }
@@ -41,7 +54,12 @@ public class SSHExecutor {
             ssh.loadKnownHosts();
             ssh.addHostKeyVerifier(config.getHostKey());
             ssh.connect(config.getHost(), config.getPort());
-            ssh.authPassword(config.getUser(), config.getPassword());
+
+            if(config.getKeyFile() != null) {
+                KeyProvider keys = ssh.loadKeys(config.getKeyFile(), config.getPassword());
+                ssh.authPublickey(config.getUser(), keys);
+            } else
+                ssh.authPassword(config.getUser(), config.getPassword());
 
             try (Session session = ssh.startSession()) {
                 final Session.Command cmd = session.exec(config.getCommand());
@@ -52,7 +70,8 @@ public class SSHExecutor {
                 try {
                     cmd.join(5, TimeUnit.SECONDS);
                 } catch(ConnectionException e) {
-                    System.out.println("Exit status: " + cmd.getExitStatus());
+                    logger.error("Exception while waiting for backup process to finish " +
+                            "(exit: " + cmd.getExitStatus() + ")", e);
                 }
 
                 session.close();
@@ -81,13 +100,13 @@ public class SSHExecutor {
         try (OutputStream rawOut = new FileOutputStream(outputFile)) {
             OutputStream out = new BufferedOutputStream(rawOut);
 
-            System.out.println("Reading in " + buffer_size + " byte chunks..");
+            logger.debug("Reading in {} byte chunks..", bufferSize);
 
             long start = chunkStart = System.currentTimeMillis();
 
-            byte[] buffer = new byte[buffer_size];
+            byte[] buffer = new byte[bufferSize];
             int read;
-            while ((read = in.read(buffer)) != -1 && !canceled) {
+            while ((read = in.read(buffer)) != -1 && !cancelled) {
                 out.write(buffer, 0, read);
 
                 readTotalBytes += read;
@@ -98,7 +117,7 @@ public class SSHExecutor {
                     speedKBs.set((double) deltaBytes / (double) deltaTime / 1024d * 1000d);
                     bytesDownloaded.set(readTotalBytes);
 
-                    System.out.println(String.format("Speed: %.2f KiB/s", speedKBs.get()));
+                    logger.info(String.format("Speed: %.2f KiB/s", speedKBs.get()));
 
                     deltaBytes = 0L;
                     chunkStart =  System.currentTimeMillis();
@@ -114,7 +133,7 @@ public class SSHExecutor {
         bytesDownloaded.set(readTotalBytes);
         speedKBs.setValue((double) readTotalBytes / (double) durationMs / 1024d * 1000d);
 
-        System.out.println(String.format(
+        logger.info(String.format(
                 "\nTransmitted %.2f KiB at %.2f KiB/s.\nThis took %.2f seconds.",
                 readTotalBytes / 1024d, speedKBs.get(), durationMs / 1000d));
     }
@@ -127,14 +146,15 @@ public class SSHExecutor {
         return bytesDownloaded;
     }
 
-    public int getBuffer_size() {
-        return buffer_size;
+    public int getBufferSize() {
+        return bufferSize;
     }
-    public void setBuffer_size(int buffer_size) {
-        this.buffer_size = buffer_size;
+
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 
     public void cancel() {
-        canceled = true;
+        cancelled = true;
     }
 }
