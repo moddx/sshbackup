@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tuxship.sshbackup.BackupConfig;
-import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.nio.file.Files;

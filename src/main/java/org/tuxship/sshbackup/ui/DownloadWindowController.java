@@ -77,11 +77,11 @@ public class DownloadWindowController {
             long hours = durSecs / 3600;
             long mins = (durSecs % 3600) / 60;
             long secs = durSecs % 60;
-            format = String.format("%dh %d:%d", hours, mins, secs);
+            format = String.format("%dh %02d:%02d h", hours, mins, secs);
         } else if(durSecs > 60) {
             long mins = durSecs / 60;
             long secs = durSecs % 60;
-            format = String.format("%d:%d", mins, secs);
+            format = String.format("%d:%02d m", mins, secs);
         } else
             format = String.format("%d s", durSecs);
 
