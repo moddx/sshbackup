@@ -1,5 +1,6 @@
 package org.tuxship.sshbackup.util;
 
+import lombok.extern.slf4j.Slf4j;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.transport.TransportException;
 import org.tuxship.sshbackup.BackupConfig;
@@ -13,9 +14,10 @@ import java.util.regex.Pattern;
  * Created by Matthias Ervens on 05.03.2017.
  */
 @Named
+@Slf4j
 public class HostKeyQuery {
 
-    private static Pattern p = Pattern.compile("(([a-f0-9]{2}:)*[a-f0-9]{2})");
+    private static final Pattern p = Pattern.compile("(([a-f0-9]{2}:)*[a-f0-9]{2})");
 
     public String query(BackupConfig config) {
         try (SSHClient ssh = new SSHClient()) {
@@ -29,9 +31,8 @@ public class HostKeyQuery {
                         .findFirst().orElse(null);
             }
             ssh.disconnect();
-            ssh.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error retrieving HostKey", e);
         }
         return null;
     }

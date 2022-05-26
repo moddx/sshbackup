@@ -2,9 +2,8 @@ package org.tuxship.sshbackup.util;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tuxship.sshbackup.BackupConfig;
@@ -21,21 +20,21 @@ import java.io.IOException;
  * Created by Matthias Ervens on 25.02.2017.
  */
 @Component
+@Slf4j
 public class DownloadInitiator {
 
-    private Logger logger = LoggerFactory.getLogger(DownloadInitiator.class);
-
-    @Autowired
-    private DownloadWindowProvider dWinProv;
-
-    @Autowired
-    private SSHExecutor sshExec;
-
-    @Autowired
-    private PasswordWindowProvider pwWinProv;
+    private final DownloadWindowProvider dWinProv;
+    private final SSHExecutor sshExec;
+    private final PasswordWindowProvider pwWinProv;
 
     private DownloadWindowController dWinCon;
     private PasswordWindowController pwWinCon;
+
+    public DownloadInitiator(DownloadWindowProvider dWinProv, SSHExecutor sshExec, PasswordWindowProvider pwWinProv) {
+        this.dWinProv = dWinProv;
+        this.sshExec = sshExec;
+        this.pwWinProv = pwWinProv;
+    }
 
 
     public void init(BackupConfig config) {
@@ -43,11 +42,11 @@ public class DownloadInitiator {
         // todo implement naming scheme
         final String outputFile = config.getOutputFolder() + File.separator + config.getNamingScheme();
 
-        Task<Boolean> dTask = new Task<Boolean>() {
+        Task<Boolean> dTask = new Task<>() {
             Runnable onCancel;
 
             @Override
-            protected Boolean call() throws Exception {
+            protected Boolean call() {
                 onCancel = sshExec::cancel;
                 boolean status = sshExec.download(outputFile);
                 finished(status);
@@ -65,19 +64,15 @@ public class DownloadInitiator {
         // prepare SSHExecutor
         sshExec.init(config);
 
-        sshExec.speedKBsProperty().addListener((observable, oldValue, newValue) -> {
-            updateSpeed((Double) newValue);
-        });
-        sshExec.bytesDownloadedProperty().addListener((observable, oldValue, newValue) -> {
-            updateBytesDownloaded((Long) newValue);
-        });
+        sshExec.speedKBsProperty().addListener((observable, oldValue, newValue) -> updateSpeed((Double) newValue));
+        sshExec.bytesDownloadedProperty().addListener((observable, oldValue, newValue) -> updateBytesDownloaded((Long) newValue));
 
         // ask for password if necessary
         if(config.getAskForPw()) {
             try {
                 pwWinCon = pwWinProv.showAndWaitForWindow();
             } catch (IOException e) {
-                logger.error("Exception while opening the password prompt.", e);
+                log.error("Exception while opening the password prompt.", e);
             }
             String pw = pwWinCon.waitForPassword();
             if(StringUtils.isEmpty(pw)) return;
@@ -88,12 +83,10 @@ public class DownloadInitiator {
         try {
             dWinCon = dWinProv.loadWindow();
         } catch (IOException e) {
-            logger.error("Exception while opening DownloadWindow.", e);
+            log.error("Exception while opening DownloadWindow.", e);
         }
         dWinCon.setFile(outputFile);
-        dWinCon.setOnCancel(() -> {
-            dTask.cancel();
-        });
+        dWinCon.setOnCancel(dTask::cancel);
 
         // start downloading
         Thread t = new Thread(dTask);

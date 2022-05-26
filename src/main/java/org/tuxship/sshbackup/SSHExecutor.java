@@ -1,6 +1,7 @@
 package org.tuxship.sshbackup;
 
 import javafx.beans.property.*;
+import lombok.extern.slf4j.Slf4j;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.connection.ConnectionException;
@@ -22,9 +23,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Named
 @Scope("prototype")
+@Slf4j
 public class SSHExecutor {
-
-    private static final Logger logger = LoggerFactory.getLogger(SSHExecutor.class);
 
     private static final Boolean SUCCESS = Boolean.TRUE;
     private static final Boolean FAILURE = Boolean.FALSE;
@@ -72,20 +72,14 @@ public class SSHExecutor {
                 try {
                     cmd.join(5, TimeUnit.SECONDS);
                 } catch(ConnectionException e) {
-                    logger.error("Exception while waiting for backup process to finish " +
+                    log.error("Exception while waiting for backup process to finish " +
                             "(exit: " + cmd.getExitStatus() + ")", e);
                 }
-
-                session.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return FAILURE;
             }
 
             ssh.disconnect();
-            ssh.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception during backup", e);
             return FAILURE;
         }
 
@@ -102,7 +96,7 @@ public class SSHExecutor {
         try (OutputStream rawOut = new FileOutputStream(outputFile)) {
             OutputStream out = new BufferedOutputStream(rawOut);
 
-            logger.debug("Reading in {} byte chunks..", bufferSize);
+            log.debug("Reading in {} byte chunks..", bufferSize);
 
             long start = chunkStart = System.currentTimeMillis();
 
@@ -119,7 +113,7 @@ public class SSHExecutor {
                     speedKBs.set((double) deltaBytes / (double) deltaTime / 1024d * 1000d);
                     bytesDownloaded.set(readTotalBytes);
 
-                    logger.info(String.format("Speed: %.2f KiB/s", speedKBs.get()));
+                    log.info(String.format("Speed: %.2f KiB/s", speedKBs.get()));
 
                     deltaBytes = 0L;
                     chunkStart =  System.currentTimeMillis();
@@ -135,7 +129,7 @@ public class SSHExecutor {
         bytesDownloaded.set(readTotalBytes);
         speedKBs.setValue((double) readTotalBytes / (double) durationMs / 1024d * 1000d);
 
-        logger.info(String.format(
+        log.info(String.format(
                 "\nTransmitted %.2f KiB at %.2f KiB/s.\nThis took %.2f seconds.",
                 readTotalBytes / 1024d, speedKBs.get(), durationMs / 1000d));
     }
